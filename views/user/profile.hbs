@@ -1,0 +1,38 @@
+{{!-- Mostrar mensajes flash --}}
+{{#if success_msg}}
+<div class="alert alert-success">
+  {{success_msg}}
+</div>
+{{/if}}
+
+{{#if error_msg}}
+<div class="alert alert-danger">
+  {{error_msg}}
+</div>
+{{/if}}
+
+{{#if errors}}
+<div class="alert alert-danger">
+  <ul>
+    {{#each errors}}
+      <li>{{msg}}</li>
+    {{/each}}
+  </ul>
+</div>
+{{/if}}
+
+<h1>Mi Perfil</h1>
+
+<form action="/user/profile" method="POST">
+  <div class="mb-3">
+    <label for="name" class="form-label">Nombre:</label>
+    <input type="text" class="form-control" id="name" name="name" value="{{user.name}}">
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Email:</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{user.email}}">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
+</form>
