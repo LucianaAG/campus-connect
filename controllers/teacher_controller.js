@@ -45,7 +45,7 @@ module.exports.register_teacher_form = async (request, response) => {
         response.redirect('/teacher/register')
     } catch (error) {
         console.log('Error al registrar al profesor', error);
-        request.flash('error_msg', 'Ocurrió un error al registrar');
+        request.flash('error_msg', 'Ocurrió un error al registrar el profesor');
         response.redirect('/teacher/register');
     }
 };
@@ -107,8 +107,8 @@ module.exports.edit_teacher_form = async (request, response) => {
         const dni = request.body.dni;
         const specialty = request.body.specialty;
         
-        const update_teache_data = {name, dni, specialty};
-        await Teacher.update(update_teache_data, {where: {teacher_id}});
+        const update_teacher_data = {name, dni, specialty};
+        await Teacher.update(update_teacher_data, {where: {teacher_id}});
         request.flash('success_msg', "El registro se ha actualizado con exito");
         response.redirect('/teacher/list');
 
@@ -126,7 +126,7 @@ module.exports.edit_teacher_form = async (request, response) => {
 
 // ------------------ Controlador de eliminación ------------------
 
-module.exports.delete = async (request, response) => {
+module.exports.delete_teacher = async (request, response) => {
     const teacher_id = request.params.teacher_id;
     
     try {

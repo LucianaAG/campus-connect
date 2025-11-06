@@ -13,7 +13,7 @@ const Subject = db.sequelize_connection.define('subject',
             type: sequelize.STRING
         },
         code: {
-            type: sequelize.INTEGER
+            type: sequelize.STRING
         },
         maximum_capacity: {
             type: sequelize.INTEGER
