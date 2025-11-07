@@ -34,7 +34,7 @@ module.exports.register_teacher_form = async (request, response) => {
     const specialty = request.body ? request.body.specialty : null;
 
     try {
-        const new_teacher = await Subject.create({
+        const new_teacher = await Teacher.create({
             name,
             dni,
             specialty

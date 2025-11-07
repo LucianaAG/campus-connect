@@ -60,7 +60,7 @@ module.exports.edit_subject_form = async (request, response) => {
                 error: errors.array(),
                 subject: {
                     name: request.body.name,
-                    code: request.body.name,
+                    code: request.body.code,
                     maximum_capacity: request.body.maximum_capacity,
                     minimum_capacity: request.body.minimum_capacity
                 }
@@ -70,12 +70,12 @@ module.exports.edit_subject_form = async (request, response) => {
 
     try {
         const subject_id = request.params.teacher_id;
-        const name = request.body.name
-        const code = request.body.code
-        const maximum_capacity = request.body.maximum_capacity
-        const minimum_capacity = request.body.minimum_capacity
+        const name = request.body.name;
+        const code = request.body.code;
+        const maximum_capacity = request.body.maximum_capacity;
+        const minimum_capacity = request.body.minimum_capacity;
 
-        const subject_update_data = {name, code, maximum_capacity, minimum_capacity}
+        const subject_update_data = {name, code, maximum_capacity, minimum_capacity};
         await Subject.update(subject_update_data, {where: {subject_id}});
         request.flash('succes_msg', 'La materia se ha actualizado con exito');
         response.redirect('/subject/list');
