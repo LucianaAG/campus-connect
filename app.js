@@ -13,6 +13,7 @@ const home_controller = require('./controllers/home_controller');
 const user_router = require('./routes/user_routes');
 const teacher_routes = require('./routes/teacher_routes');
 const subject_routes = require('./routes/subject_routes');
+const student_routes = require('./routes/student_routes');
 // ------------------ Configuración Handlebars ------------------
 const handlebars_instance = create({
   extname: '.hbs',
@@ -58,6 +59,7 @@ app.get('/', home_controller.home);
 app.use('/user', user_router);
 app.use('/teacher', teacher_routes);
 app.use('/subject', subject_routes);
+app.use('/student', student_routes);
 
 // ------------------ Base de Datos ------------------
 const {sequelize_connection, ensure_database} = require('./database/conexion_mysql_db');
