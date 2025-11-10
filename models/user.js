@@ -15,7 +15,8 @@ const user = db.sequelize_connection.define('users',
             allowNull: false
         },
         email: {
-            type: sequelize.STRING(100)
+            type: sequelize.STRING(100),
+            unique: true
         },
         password: {
             type: sequelize.STRING(100)

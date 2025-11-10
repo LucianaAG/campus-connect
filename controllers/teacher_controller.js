@@ -9,21 +9,7 @@ const Teacher = require('../models/teacher_model');
 // ------------------ Controlador de renderizado ------------------
 
 module.exports.render_register_teacher_form = async (request, response) => {
-    try {
-        const subjects = await Subject.findAll(
-            {
-                order: [
-                    ['name', 'ASC'],
-                    ['code', 'ASC']
-                ],
-                raw: true
-            });
-            response.render('teacher/register', {subjects});
-    } catch (error) {
-        console.error('Error al cargar las materias', error.message);
-        request.flash('error_msg', 'No se pudieron cargar las materias');
-        request.redirect('/');
-    }
+        response.render('teacher/register');
 };
 
 // ------------------ Controlador de registro ------------------
@@ -66,21 +52,7 @@ module.exports.list_teachers = async (request, response) => {
 // ------------------ Controlador para renderizar form de modificación ------------------
 
 module.exports.render_edit_teacher_form = async (request, response) => {
-    try {
-        const subjects = await Subject.findAll(
-            {
-                order: [
-                    ['name', 'ASC'],
-                    ['code', 'ASC']
-                ],
-                raw: true
-            });
-        response.render('teacher/edit', {subjects});
-    } catch (error) {
-        console.error('Error al cargar las materias', error.message);
-        request.flash('error_msg', 'No se pudieron cargar las materias');
-        request.redirect('/');
-    }
+        response.render('teacher/edit');
 ;}
 
 // ------------------ Controlador para actualizar los datos en la bd ------------------

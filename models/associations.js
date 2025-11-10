@@ -8,10 +8,10 @@ Teacher.hasMany(Subject, { foreignKey: 'teacher_id' });
 // varias materias son impartidas por un profesor
 Subject.belongsTo(Teacher, { foreignKey: 'teacher_id' });
 
-Student.hasMany(Inscription, {foreignKey: 'inscription_id'});
+Student.hasMany(Inscription, {foreignKey: 'student_id'});
 Inscription.belongsTo(Student, {foreignKey: 'student_id'});
 
-Subject.hasMany(Inscription, {foreignKey: 'inscription_id'});
+Subject.hasMany(Inscription, {foreignKey: 'subject_id'});
 Inscription.belongsTo(Subject, {foreignKey: 'subject_id'});
 
 module.exports = {

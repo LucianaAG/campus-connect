@@ -1,12 +1,24 @@
 const {validationResult} = require('express-validator');
 const Subject = require('../models/subject_model');
+const Teacher = require('../models/teacher_model');
 
 // -------------------------------------------------------- ADMIN SESSION CONTROLLERS ---------------------------------------------------------------------------
 
 // ------------------ Controlador de renderizado ------------------
 
 module.exports.render_subject_register_form = async (request, response) => {
-    response.render('subject/register');
+    try {
+        const teachers = await Teacher.findAll({
+            order: [['name', 'ASC']],
+            raw: true
+        });
+
+        response.render('subject/register', {teachers});
+    } catch (error) {
+        console.error('error al cargar categorías:', error.message);
+        request.flash('error_msg', 'no se pudieron cargar las categorías');
+        response.redirect('/');
+    }
 };
 
 // ------------------ Controlador de registro ------------------
@@ -15,13 +27,15 @@ module.exports.subject_register_form = async (request, response) => {
     const code = request.body.code;
     const maximum_capacity = request.body.maximum_capacity;
     const minimum_capacity = request.body.minimum_capacity;
+    const teacher_id = request.body.teacher_id;
 
     try {
         const new_subject = await Subject.create({
             name,
             code,
             maximum_capacity,
-            minimum_capacity
+            minimum_capacity,
+            teacher_id
         });
         console.log('Nueva materia registrada', new_subject.toJSON());
         request.flash('success_msg', 'La materia se ha registrado con exito');
@@ -47,7 +61,27 @@ module.exports.list_subjects = async (request, response) => {
 
 // ------------------ Controlador para renderizar form de modificacion ------------------
 module.exports.render_edit_subject_form = async (request, response) => {
-    response.render('subject/edit');
+    try {
+        const subject_id = request.params.subject_id;
+        const subject_data = await Subject.findByPk(subject_id, {raw: true});
+
+        if (!subject_data) {
+            request.flash('error_msg', 'No se ha encontrado el registro');
+            return response.redirect('/subject/list');
+        }
+
+        // Cargar las categorías
+        const teachers = await Teacher.findAll({ order: [['name', 'ASC']], raw: true });
+
+        response.render('subject/edit', {
+            subject: subject_data,
+            teachers // ahora la vista recibe categories
+        });
+    } catch (error) {
+        console.log("Error al obtener el registro", error.message);
+        request.flash("error_msg", "Ocurrió un error al obtener el producto");
+        return response.redirect("/subject/list");
+    }
 };
 
 // ------------------ Controlador para actualizar los datos en la bd ------------------
@@ -62,22 +96,24 @@ module.exports.edit_subject_form = async (request, response) => {
                     name: request.body.name,
                     code: request.body.code,
                     maximum_capacity: request.body.maximum_capacity,
-                    minimum_capacity: request.body.minimum_capacity
+                    minimum_capacity: request.body.minimum_capacity,
+                    teacher_id: request.body.teacher_id
                 }
             }
         );
     }
 
     try {
-        const subject_id = request.params.teacher_id;
+        const subject_id = request.params.subject_id;
         const name = request.body.name;
         const code = request.body.code;
         const maximum_capacity = request.body.maximum_capacity;
         const minimum_capacity = request.body.minimum_capacity;
+        const teacher_id = request.body.teacher_id;
 
-        const subject_update_data = {name, code, maximum_capacity, minimum_capacity};
+        const subject_update_data = {name, code, maximum_capacity, minimum_capacity, teacher_id: teacher_id};
         await Subject.update(subject_update_data, {where: {subject_id}});
-        request.flash('succes_msg', 'La materia se ha actualizado con exito');
+        request.flash('success_msg', 'La materia se ha actualizado con exito');
         response.redirect('/subject/list');
 
     } catch (error) {
@@ -96,10 +132,10 @@ module.exports.delete_subject = async (request, response) => {
     const subject_id = request.params.subject_id;
     try {
         await Subject.destroy({where: {subject_id}});
-        request.flash('succes_msg', 'El registro se ha eliminado con exito');
+        request.flash('success_msg', 'El registro se ha eliminado con exito');
         response.redirect('/subject/list');
     } catch (error) {
-        console.error('errro al eliminar el registro', error.message);
+        console.error('error al eliminar el registro', error.message);
 
         if (error.parent) {
             console.error('Detalle SQL', error.parent.sqlMessage);

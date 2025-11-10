@@ -14,8 +14,8 @@ module.exports.render_student_register_form = async (request, response) => {
 
 module.exports.student_register_form = async (request, response) => {
     const name = request.body.name;
-    const dni = request.body.name;
-    const birth_date = request.body.name;
+    const dni = request.body.dni;
+    const birth_date = request.body.birth_date;
     const status = request.body.status;
 
     try {
@@ -109,6 +109,6 @@ module.exports.delete_student = async (request, response) => {
             console.error('Detalle SQL', error.parent.sqlMessage);
         }
         request.flash('error_msg', 'Ocurrió un error al eliminar el registro');
-        response.redirect('/teacher/list');
+        response.redirect('/student/list');
     }
 };

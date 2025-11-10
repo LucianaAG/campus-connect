@@ -29,23 +29,34 @@
                         <form action="/subject/register" method="POST">
 
                             <div class="mb-3">
-                                <label for="name" class="form-label">Nombre </label>
+                                <label for="name" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" id="name" name="name" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="code" class="form-label">Codigo </label>
+                                <label for="code" class="form-label">Código</label>
                                 <input type="text" class="form-control" id="code" name="code" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="maximum_capacity" class="form-label">Capacidad maxima</label>
+                                <label for="maximum_capacity" class="form-label">Capacidad máxima</label>
                                 <input type="number" class="form-control" id="maximum_capacity" name="maximum_capacity" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="minimum_capacity" class="form-label">Capacidad minima</label>
+                                <label for="minimum_capacity" class="form-label">Capacidad mínima</label>
                                 <input type="number" class="form-control" id="minimum_capacity" name="minimum_capacity" required>
+                            </div>
+
+                            <!-- 🔹 Nuevo campo: seleccionar docente -->
+                            <div class="mb-3">
+                                <label for="teacher_id" class="form-label">Docente</label>
+                                <select id="teacher_id" name="teacher_id" class="form-select" required>
+                                    <option value="">Seleccione un docente</option>
+                                    {{#each teachers}}
+                                        <option value="{{this.teacher_id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
                             </div>
 
                             <div class="d-grid">

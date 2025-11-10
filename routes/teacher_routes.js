@@ -18,6 +18,6 @@ router.get('/list', ensure_authenticated, teacher_controllers.list_teachers);
 // ------------------ Rutas de edición y eliminación ------------------
 router.get('/edit/:teacher_id', ensure_authenticated, teacher_controllers.render_edit_teacher_form);
 router.post('/edit/:teacher_id', ensure_authenticated, teacher_controllers.edit_teacher_form);
-router.get('/delete/:teacher_id', ensure_authenticated, teacher_controllers.delete_teacher);
+router.post('/delete/:teacher_id', ensure_authenticated, teacher_controllers.delete_teacher);
 
 module.exports = router;

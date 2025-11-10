@@ -19,4 +19,6 @@ router.get('/edit/:student_id', ensure_authenticated, student_controllers.render
 router.post('/edit/:student_id', ensure_authenticated, student_controllers.render_student_edit_form);
 
 // ------------------ Ruta de eliminación ------------------
-router.post('/edit/:student_id', ensure_authenticated, student_controllers.delete_student);
+router.post('/delete/:student_id', ensure_authenticated, student_controllers.delete_student);
+
+module.exports = router;

@@ -11,7 +11,7 @@ const Student = db.sequelize_connection.define('student',
         name: {
             type: sequelize.STRING,
         },
-        DNI: {
+        dni: {
             type: sequelize.INTEGER,
             unique: true
         },
