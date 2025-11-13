@@ -18,19 +18,26 @@ module.exports.user_register = async (request, response) => {
             errors: errors.array(),
             user: {
                 name: request.body.name,
-                email: request.body.email
+                email: request.body.email,
+                password: request.body.password,
+                confirm_password: request.body.confirm_password
             }
         });
     }
 
     try {
-        const {name, email, password} = request.body; // si no hay errores, se trae del cuerpo de la solicitud los datos ingresados
+        const {name, email, password, confirm_password} = request.body; // si no hay errores, se trae del cuerpo de la solicitud los datos ingresados
         
         const user_exists = await user.findOne({where: {email}}); // se busca un usuario con el mismo email ingresado
 
         if (user_exists) { // si existe un usuario con ese email, 
                           // se notifica que ya está en uso y redirecciona al formulario de registro
             request.flash('error_msg', 'el email ya está registrado');
+            return response.redirect('/user/register');
+        }
+
+        if (confirm_password != password) {
+            request.flash('error_msg', 'las contraseñas no coinciden');
             return response.redirect('/user/register');
         }
 

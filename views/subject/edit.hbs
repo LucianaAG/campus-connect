@@ -26,33 +26,31 @@
                         {{/if}}
 
                         <!-- Formulario -->
-                        <form action="/subject/register" method="POST">
+                        <form action="/subject/edit/{{subject.subject_id}}" method="POST">
 
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nombre </label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" name="name" value="{{subject.name}}" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="code" class="form-label">Codigo </label>
-                                <input type="text" class="form-control" id="code" name="code" required>
+                                <input type="text" class="form-control" id="code" name="code" value="{{subject.code}}" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="maximum_capacity" class="form-label">Capacidad maxima</label>
-                                <input type="number" class="form-control" id="maximum_capacity" name="maximum_capacity" required>
+                                <input type="number" class="form-control" id="maximum_capacity" name="maximum_capacity" value="{{subject.maximum_capacity}}" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="minimum_capacity" class="form-label">Capacidad minima</label>
-                                <input type="number" class="form-control" id="minimum_capacity" name="minimum_capacity" required>
+                                <input type="number" class="form-control" id="minimum_capacity" name="minimum_capacity" value="{{subject.minimum_capacity}}" required>
                             </div>
 
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">Actualizar Materia</button>
                             </div>
-
-                        </form>
 
                         </form>
                     </div>

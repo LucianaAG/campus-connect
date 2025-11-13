@@ -22,6 +22,12 @@ const Subject = db.sequelize_connection.define('subject',
         minimum_capacity: {
             type: sequelize.INTEGER
         },
+        start_time: {
+            type: sequelize.TIME
+        },
+        end_time: {
+            type: sequelize.TIME
+        },
         teacher_id: { 
             type: sequelize.INTEGER,
             allowNull: false

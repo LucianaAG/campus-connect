@@ -18,6 +18,12 @@ module.exports.register_teacher_form = async (request, response) => {
     const name = request.body ? request.body.name : null;
     const dni = request.body ? request.body.dni : null;
     const specialty = request.body ? request.body.specialty : null;
+    const dni_exist = await Teacher.findOne({where: {dni}});
+
+    if (dni_exist) {
+        request.flash('error_msg', 'Ya existe un profesor con ese DNI');
+        response.redirect('/teacher/register')
+    }
 
     try {
         const new_teacher = await Teacher.create({
@@ -102,7 +108,14 @@ module.exports.delete_teacher = async (request, response) => {
     const teacher_id = request.params.teacher_id;
     
     try {
-        await Teacher.destroy({where: {teacher_id}});
+        const teacher = await Teacher.findByPk(teacher_id);
+
+        if (!teacher) {
+            request.flash('error_msg', 'El registro no existe');
+            return response.redirect('/teacher/list');
+        }
+        await teacher.destroy();
+
         request.flash('success_msg', 'El registro se ha eliminado con exito');
         response.redirect('/teacher/list');
     } catch (error) {

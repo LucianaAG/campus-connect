@@ -16,7 +16,7 @@ router.get('/list', student_controllers.list_students);
 
 // ------------------ Rutas de edición ------------------
 router.get('/edit/:student_id', ensure_authenticated, student_controllers.render_student_edit_form);
-router.post('/edit/:student_id', ensure_authenticated, student_controllers.render_student_edit_form);
+router.post('/edit/:student_id', ensure_authenticated, student_controllers.student_edit_form);
 
 // ------------------ Ruta de eliminación ------------------
 router.post('/delete/:student_id', ensure_authenticated, student_controllers.delete_student);

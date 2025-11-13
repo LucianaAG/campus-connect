@@ -13,11 +13,11 @@ module.exports.render_subject_register_form = async (request, response) => {
             raw: true
         });
 
-        response.render('subject/register', {teachers});
+        return response.render('subject/register', {teachers});
     } catch (error) {
         console.error('error al cargar categorías:', error.message);
         request.flash('error_msg', 'no se pudieron cargar las categorías');
-        response.redirect('/');
+        return response.redirect('/');
     }
 };
 
@@ -27,7 +27,15 @@ module.exports.subject_register_form = async (request, response) => {
     const code = request.body.code;
     const maximum_capacity = request.body.maximum_capacity;
     const minimum_capacity = request.body.minimum_capacity;
+    const start_time = request.body.start_time;
+    const end_time = request.body.end_time;
     const teacher_id = request.body.teacher_id;
+    const code_exist = await Subject.findOne({where: {code}});
+
+    if (code_exist) {
+        request.flash('error_msg', 'Ya existe una matería con ese codigo.');
+        return response.redirect('/subject/register');
+    }
 
     try {
         const new_subject = await Subject.create({
@@ -35,15 +43,17 @@ module.exports.subject_register_form = async (request, response) => {
             code,
             maximum_capacity,
             minimum_capacity,
+            start_time,
+            end_time,
             teacher_id
         });
         console.log('Nueva materia registrada', new_subject.toJSON());
         request.flash('success_msg', 'La materia se ha registrado con exito');
-        response.redirect('/subject/register');
+        return response.redirect('/subject/register');
     } catch (error) {
         console.log('Error al registrar la materia', error);
         request.flash('error_msg', 'Ocurrió un error al registrar la materia')
-        response.redirect('/subject/register');
+        return response.redirect('/subject/register');
     }
 };
 
@@ -51,11 +61,11 @@ module.exports.subject_register_form = async (request, response) => {
 module.exports.list_subjects = async (request, response) => {
     try {
         const subjects = await Subject.findAll({raw: true});
-        response.render('subject/list', {subjects});
+        return response.render('subject/list', {subjects});
     } catch (error) {
         console.log('Error al listar los registros', error);
         request.flash('error_msg', 'Ocurrió un error al listar los registros');
-        response.redirect('/home');
+        return response.redirect('/home');
     }
 };
 
@@ -73,8 +83,9 @@ module.exports.render_edit_subject_form = async (request, response) => {
         // Cargar las categorías
         const teachers = await Teacher.findAll({ order: [['name', 'ASC']], raw: true });
 
-        response.render('subject/edit', {
+        return response.render('subject/edit', {
             subject: subject_data,
+            subject_id: subject_id,
             teachers // ahora la vista recibe categories
         });
     } catch (error) {
@@ -97,6 +108,8 @@ module.exports.edit_subject_form = async (request, response) => {
                     code: request.body.code,
                     maximum_capacity: request.body.maximum_capacity,
                     minimum_capacity: request.body.minimum_capacity,
+                    start_time,
+                    end_time,
                     teacher_id: request.body.teacher_id
                 }
             }
@@ -109,12 +122,14 @@ module.exports.edit_subject_form = async (request, response) => {
         const code = request.body.code;
         const maximum_capacity = request.body.maximum_capacity;
         const minimum_capacity = request.body.minimum_capacity;
+        const start_time = request.body.start_time;
+        const end_time = request.body.end_time;
         const teacher_id = request.body.teacher_id;
 
-        const subject_update_data = {name, code, maximum_capacity, minimum_capacity, teacher_id: teacher_id};
+        const subject_update_data = {name, code, maximum_capacity, minimum_capacity, start_time, end_time, teacher_id: teacher_id};
         await Subject.update(subject_update_data, {where: {subject_id}});
         request.flash('success_msg', 'La materia se ha actualizado con exito');
-        response.redirect('/subject/list');
+        return response.redirect('/subject/list');
 
     } catch (error) {
         console.error('Error al actualizar el registro', error);
@@ -123,17 +138,24 @@ module.exports.edit_subject_form = async (request, response) => {
             console.error('Detalle SQL', error.parent.sqlMessage);
         }
         request.flash('error_msg', 'Ocurrió un error al actualizar el registro');
-        response.redirect('/subject/list');
+        return response.redirect('/subject/list');
     }
 };
 
 // ------------------ Controlador de eliminación ------------------
 module.exports.delete_subject = async (request, response) => {
-    const subject_id = request.params.subject_id;
+        const subject_id = request.params.subject_id;
     try {
-        await Subject.destroy({where: {subject_id}});
+        const subject = await Subject.findByPk(subject_id);
+
+        if (!subject) {
+            request.flash('error_msg', 'El registro no existe');
+            return response.redirect('/subject/list');
+        }
+        await subject.destroy();
+
         request.flash('success_msg', 'El registro se ha eliminado con exito');
-        response.redirect('/subject/list');
+        return response.redirect('/subject/list');
     } catch (error) {
         console.error('error al eliminar el registro', error.message);
 
@@ -141,7 +163,7 @@ module.exports.delete_subject = async (request, response) => {
             console.error('Detalle SQL', error.parent.sqlMessage);
         }
         request.flash('error_msg', 'Ocurrió un error al eliminar el registro');
-        response.redirect('/subject/list');
+        return response.redirect('/subject/list');
     }
 };
 

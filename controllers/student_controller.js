@@ -52,7 +52,24 @@ module.exports.list_students = async (request, response) => {
 
 // ------------------ Controlador de modificacion ------------------
 module.exports.render_student_edit_form = async (request, response) => {
-    response.render('student/edit');
+   const student_id = request.params.student_id;
+
+    try {
+        const student = await Student.findByPk(student_id);
+
+        if (!student) {
+            request.flash('error_msg', 'El estudiante no existe');
+            return response.redirect('/student/list');
+        }
+
+        return response.render('student/edit', {
+        student: { student_id: request.params.student_id }
+        });
+    } catch (error) {
+        console.error('Error al obtener el estudiante:', error.message);
+        request.flash('error_msg', 'Ocurrió un error al cargar el formulario de edición');
+        return response.redirect('/student/list');
+    }
 };
 
 module.exports.student_edit_form = async (request, response) => {
@@ -60,7 +77,7 @@ module.exports.student_edit_form = async (request, response) => {
     const student_id = request.params.student_id;
 
     if (!errors.isEmpty()) {
-        response.redirect('/student/edit',
+        return response.redirect('/student/edit',
             {
                 errors: errors.array(),
                 student: {
@@ -82,7 +99,7 @@ module.exports.student_edit_form = async (request, response) => {
         const update_data = {name, dni, birth_date, status};
         await Student.update(update_data, {where: {student_id}});
         request.flash('succes_msg', 'El registro se ha actualizado con exito');
-        response.redirect('/student/list');
+        return response.redirect('/student/list');
     } catch (error) {
         console.error('Error al actualizar el registro', error.message);
 
@@ -90,7 +107,7 @@ module.exports.student_edit_form = async (request, response) => {
             console.error('Detalle SQL', error.parent.sqlMessage);
         }
         request.flash('error_msg', 'Ocurrió un erorr al actualizar el registro');
-        response.redirect('/student/list');
+        return response.redirect('/student/list');
     }
 };
 
@@ -99,9 +116,17 @@ module.exports.delete_student = async (request, response) => {
     const student_id = request.params.student_id;
 
     try {
-        await Student.destroy({where: {student_id}});
+        const student = await Student.findByPk(student_id);
+
+        if (!student) {
+            request.flash('error_msg', 'El registro no existe');
+            return response.redirect('/student/list');
+        }
+
+        await student.destroy();
+
         request.flash('success_msg', 'El registro se ha eliminado con exito');
-        response.redirect('(student/list');
+        return response.redirect('/student/list');
     } catch (error) {
         console.error('errro al eliminar el registro', error.message);
 
@@ -109,6 +134,6 @@ module.exports.delete_student = async (request, response) => {
             console.error('Detalle SQL', error.parent.sqlMessage);
         }
         request.flash('error_msg', 'Ocurrió un error al eliminar el registro');
-        response.redirect('/student/list');
+        return response.redirect('/student/list');
     }
 };

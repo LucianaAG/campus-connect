@@ -40,12 +40,22 @@
 
                             <div class="mb-3">
                                 <label for="maximum_capacity" class="form-label">Capacidad máxima</label>
-                                <input type="number" class="form-control" id="maximum_capacity" name="maximum_capacity" required>
+                                <input type="number" class="form-control" id="maximum_capacity" name="maximum_capacity" min="1"  max="100" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="minimum_capacity" class="form-label">Capacidad mínima</label>
-                                <input type="number" class="form-control" id="minimum_capacity" name="minimum_capacity" required>
+                                <input type="number" class="form-control" id="minimum_capacity" name="minimum_capacity" min="1" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="start_time" class="form-label">Horario de inicio</label>
+                                <input type="time" class="form-control" id="start_time" name="start_time" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="end_time" class="form-label">Horario de fin</label>
+                                <input type="time" class="form-control" id="end_time" name="end_time" required>
                             </div>
 
                             <!-- 🔹 Nuevo campo: seleccionar docente -->
